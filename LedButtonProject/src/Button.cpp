@@ -6,5 +6,5 @@ Button::Button(uint8_t pin) {
 }
 
 bool Button::isPressed() {
-    return digitalRead(pin) == HIGH;
+    return digitalRead(pin) == LOW;
 }

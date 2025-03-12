@@ -13,10 +13,10 @@ int serial_getchar(FILE* f) {
 FILE serial_stdout;
 
 void serialInit() {
-    Serial.begin(115200);
+    Serial.begin(9600);
     while (!Serial);
 
-    fdev_setup_stream(&serial_stdout, serial_putchar, serial_getchar, _FDEV_SETUP_RW);
+    fdev_setup_stream(&serial_stdout, serial_putchar, serial_getchar, _FDEV_SETUP_WRITE);
     stdout = &serial_stdout;
     stdin = &serial_stdout;
 }
