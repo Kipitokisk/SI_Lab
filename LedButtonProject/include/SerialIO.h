@@ -5,5 +5,6 @@
 #include <stdio.h>
 
 void serialInit();
+void printDistance(float distance);
 
-#endif // SERIAL_IO_H
+#endif 

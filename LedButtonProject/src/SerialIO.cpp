@@ -13,10 +13,17 @@ int serial_getchar(FILE* f) {
 FILE serial_stdout;
 
 void serialInit() {
-    Serial.begin(9600);
+    Serial.begin(115200);
     while (!Serial);
 
     fdev_setup_stream(&serial_stdout, serial_putchar, serial_getchar, _FDEV_SETUP_WRITE);
     stdout = &serial_stdout;
     stdin = &serial_stdout;
 }
+
+void printDistance(float distance) {
+    char buffer[10];
+    dtostrf(distance, 5, 2, buffer);
+    printf("Distance: %s cm\n", buffer);
+}
+

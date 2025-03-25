@@ -33,7 +33,7 @@ char getKeyInput() {
 void handleKeyPress(char key, Led &led) {
     if (key >= '0' && key <= '9' && passwordIndex < 4) {
         enteredPassword[passwordIndex] = key;
-        lcdShowPasswordChar(passwordIndex);
+        // lcdShowPasswordChar(passwordIndex);
         passwordIndex++;
 
         if (passwordIndex == 4) {
