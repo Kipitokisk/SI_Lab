@@ -21,9 +21,21 @@ void serialInit() {
     stdin = &serial_stdout;
 }
 
-void printDistance(float distance) {
+void printRawDistance(float distance) {
     char buffer[10];
     dtostrf(distance, 5, 2, buffer);
     printf("Distance: %s cm\n", buffer);
+}
+
+void printSPDistance(float distance) {
+    char buffer[10];
+    dtostrf(distance, 5, 2, buffer);
+    printf("Filtered distance: %s cm\n", buffer);
+}
+
+void printWADistance(float distance) {
+    char buffer[10];
+    dtostrf(distance, 5, 2, buffer);
+    printf("Weighted average: %s cm\n", buffer);
 }
 

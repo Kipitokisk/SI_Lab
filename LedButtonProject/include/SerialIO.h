@@ -5,6 +5,8 @@
 #include <stdio.h>
 
 void serialInit();
-void printDistance(float distance);
+void printRawDistance(float distance);
+void printSPDistance(float distance);
+void printWADistance(float distance);
 
 #endif 

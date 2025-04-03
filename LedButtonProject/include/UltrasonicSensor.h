@@ -3,8 +3,9 @@
 
 #include <Arduino.h>
 
-#define TRIG_PIN 12  
-#define ECHO_PIN 13  
+#define TRIG_PIN 9  
+#define ECHO_PIN 10  
+
 
 void ultrasonicInit();
 float getDistance();
