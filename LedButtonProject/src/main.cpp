@@ -1,31 +1,18 @@
 #include "SerialIO.h"
-#include "Relay.h"
+#include "MotorControl.h"
+#include "CommandProcessor.h"
 
-#define RELAY_PIN 8  // Change as per your setup
-
-Relay relay(RELAY_PIN);
 
 void setup() {
     serialInit();
-    printf("Relay Control Initialized. Type 'relay on' or 'relay off'.\n");
+    setup_motor();
+    printCommandHelp();
 }
 
 void loop() {
-    char command[20];
     if (Serial.available() > 0) {
-        Serial.readBytesUntil('\n', command, sizeof(command) -1);
-        command[strcspn(command, "\r\n")] = 0;
-
-        if (strcmp(command, "relay on") == 0) {
-            relay.turnOn();
-            printf("Relay is ON\n");
-        } 
-        else if (strcmp(command, "relay off") == 0) {
-            relay.turnOff();
-            printf("Relay is OFF\n");
-        } 
-        else {
-            printf("Invalid command! Use 'relay on' or 'relay off'.\n");
-        }
-    }
+        readLine();
+      }
+      delay(10);
 }
+
