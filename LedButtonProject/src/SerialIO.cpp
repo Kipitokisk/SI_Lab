@@ -1,41 +1,69 @@
-#include "SerialIO.h"
+ #include "SerialIO.h"
 
-int serial_putchar(char c, FILE* f) {
-    Serial.write(c);
-    return c;
-}
-
-int serial_getchar(FILE* f) {
-    while (!Serial.available());
-    return Serial.read();
-}
-
-FILE serial_stdout;
-
-void serialInit() {
-    Serial.begin(115200);
-    while (!Serial);
-
-    fdev_setup_stream(&serial_stdout, serial_putchar, serial_getchar, _FDEV_SETUP_WRITE);
-    stdout = &serial_stdout;
-    stdin = &serial_stdout;
-}
-
-void printRawDistance(float distance) {
-    char buffer[10];
-    dtostrf(distance, 5, 2, buffer);
-    printf("Distance: %s cm\n", buffer);
-}
-
-void printSPDistance(float distance) {
-    char buffer[10];
-    dtostrf(distance, 5, 2, buffer);
-    printf("Filtered distance: %s cm\n", buffer);
-}
-
-void printWADistance(float distance) {
-    char buffer[10];
-    dtostrf(distance, 5, 2, buffer);
-    printf("Weighted average: %s cm\n", buffer);
-}
-
+ static FILE uartout = {0};
+ static FILE uartin = {0};
+ 
+ void stdio_init(unsigned long baud) {
+     Serial.begin(115200);
+     
+     while (!Serial && millis() < 5000);
+     
+     fdev_setup_stream(&uartout, uart_putchar, NULL, _FDEV_SETUP_WRITE);
+     stdout = &uartout;
+     
+     fdev_setup_stream(&uartin, NULL, uart_getchar, _FDEV_SETUP_READ);
+     stdin = &uartin;
+ }
+ 
+ int uart_putchar(char c, FILE *stream) {
+     Serial.write(c);
+     return 0;
+ }
+ 
+ int uart_getchar(FILE *stream) {
+     while (!Serial.available());
+     return Serial.read();
+ }
+ 
+ bool stdio_available() {
+     return Serial.available() > 0;
+ }
+ 
+ bool stdio_readstring(char* buffer, size_t max_length) {
+     if (!stdio_available()) {
+         return false;
+     }
+     
+     size_t index = 0;
+     buffer[0] = '\0';
+     
+     unsigned long start_time = millis();
+     while (!stdio_available() && (millis() - start_time < 500));
+     
+     if (!stdio_available()) {
+         return false;
+     }
+     
+     while (stdio_available() && index < max_length - 1) {
+         char c = Serial.read();
+         
+         if (c == '\n' || c == '\r') {
+             break;
+         }
+         
+         buffer[index++] = c;
+         buffer[index] = '\0';
+         
+         delay(2);
+     }
+     
+     while (stdio_available()) {
+         char c = Serial.read();
+         if (c == '\n' || c == '\r') {
+             break;
+         }
+         delay(1);
+     }
+     
+     return index > 0;
+ }
